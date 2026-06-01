@@ -1,0 +1,5 @@
+=== hey load test ===
+Target: http://localhost:8000/predict
+Duration: 30s, Concurrency: 50
+
+ERROR: 'hey' not found. Install: brew install hey
