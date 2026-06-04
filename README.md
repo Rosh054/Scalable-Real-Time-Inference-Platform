@@ -249,7 +249,7 @@ results/             Load-test metrics and artifacts
 | [FORMAL_PROJECT_DOCUMENTATION.md](docs/FORMAL_PROJECT_DOCUMENTATION.md) | Academic, internship, institutional enquiries |
 | [DOCUMENTATION_INDEX.md](docs/DOCUMENTATION_INDEX.md) | Documentation catalogue |
 | [LETTER_SUPPORT_SUMMARY.md](docs/LETTER_SUPPORT_SUMMARY.md) | One-page summary for reference letters |
-| [Scalable_Real-Time_Inference_Platform_Formal_Document.pdf](docs/Scalable_Real-Time_Inference_Platform_Formal_Document.pdf) | Printable formal document |
+| [Roshini_Scalable_Real-Time_Inference_Platform_Formal.pdf](docs/Roshini_Scalable_Real-Time_Inference_Platform_Formal.pdf) | **Formal PDF** for letters and institutional submission |
 | [VERIFICATION.md](docs/VERIFICATION.md) | Third-party reproduction guide |
 | [AWS_ARCHITECTURE.md](docs/AWS_ARCHITECTURE.md) | AWS design and Well-Architected mapping |
 | [ARCHITECTURE_DECISIONS.md](docs/ARCHITECTURE_DECISIONS.md) | Architecture decision records |

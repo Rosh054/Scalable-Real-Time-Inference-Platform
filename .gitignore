@@ -46,6 +46,7 @@ results/*.csv
 # Generated PDF (regenerate with: make pdf)
 docs/*.pdf
 !docs/Scalable_Real-Time_Inference_Platform_Formal_Document.pdf
+!docs/Roshini_Scalable_Real-Time_Inference_Platform_Formal.pdf
 
 # Locust
 locustfile_*.html

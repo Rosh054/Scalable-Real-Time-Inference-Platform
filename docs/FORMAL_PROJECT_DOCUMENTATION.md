@@ -39,9 +39,9 @@ The **Scalable Real-Time Inference Platform** is a production-style **machine le
 
 **Abstract:**
 
-This project focuses on building a scalable, cloud-oriented machine learning inference platform using **FastAPI**, **Docker**, **Redis**, **PostgreSQL**, and **Amazon Web Services (AWS)** design patterns including **ECS**, **Application Load Balancer**, **RDS**, **ElastiCache**, **S3**, and **CloudWatch**. The system supports low-latency REST API predictions, deterministic caching, per-request logging, health and metrics endpoints, infrastructure-as-code, auto-scaling definitions, CI/CD pipelines, and operational monitoring alarms.
+This project focuses on building a scalable cloud-based machine learning inference platform using AWS ECS, Docker, Redis, PostgreSQL, and CloudWatch. It supports low-latency REST API predictions, caching, request logging, auto-scaling, CI/CD deployment, and monitoring, demonstrating a production-style system for reliable real-time AI model serving.
 
-The application is implemented and load-tested in a containerised local environment that mirrors the AWS service topology. Terraform modules describe the production target architecture. Documented performance results include approximately **713 requests per second** sustained throughput, **65.9 ms p50** and **107.7 ms p95** latency, **0% error rate**, and approximately **99.9% cache hit rate** under repeated-payload load testing, with verifiable artifacts stored under `results/`.
+The application is implemented and load-tested in a containerised local environment that mirrors the AWS service topology. Terraform describes the production target architecture. Documented performance results include approximately **713 requests per second** sustained throughput, **65.9 ms p50** and **107.7 ms p95** latency, **0% error rate**, and approximately **99.9% cache hit rate** under repeated-payload load testing, with verifiable artifacts stored under `results/`.
 
 **Keywords:** Machine learning inference, FastAPI, Redis, PostgreSQL, Docker, AWS ECS, Terraform, cache-aside, observability, CI/CD.
 
@@ -53,7 +53,7 @@ The application is implemented and load-tested in a containerised local environm
 
 **Abstract:**
 
-This internship-focused work centres on developing **scalable backend services** using **FastAPI**, **Redis**, **PostgreSQL**, **Docker**, **AWS-aligned architecture**, and **CI/CD** workflows. The deliverable is a real-time inference API with distributed caching, structured logging, database audit trails, automated testing, and infrastructure-as-code for cloud deployment.
+This internship focuses on developing scalable backend services using FastAPI, Redis, PostgreSQL, Docker, AWS, and CI/CD workflows. The work involves building REST APIs, asynchronous task processing, distributed caching, fault-tolerant queues, monitoring dashboards, and cloud deployments to gain practical experience in backend engineering and distributed systems.
 
 **Scope alignment with internship themes:**
 

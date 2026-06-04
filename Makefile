@@ -55,3 +55,4 @@ check: lint test verify-terraform
 
 pdf:
 	$(PY) scripts/generate_project_pdf.py
+	$(PY) scripts/generate_project_pdf.py --output docs/Scalable_Real-Time_Inference_Platform_Formal_Document.pdf

@@ -11,7 +11,8 @@
 | Document | Audience | Description |
 |----------|----------|-------------|
 | **[FORMAL_PROJECT_DOCUMENTATION.md](FORMAL_PROJECT_DOCUMENTATION.md)** | Institution, referees, HR, audit | **Primary formal record** — abstracts, architecture, scope, metrics, deployment status, maintenance |
-| **[Scalable_Real-Time_Inference_Platform_Formal_Document.pdf](Scalable_Real-Time_Inference_Platform_Formal_Document.pdf)** | Institution, print/submit | PDF export for letters and submissions (regenerate: `make pdf`) |
+| **[Roshini_Scalable_Real-Time_Inference_Platform_Formal.pdf](Roshini_Scalable_Real-Time_Inference_Platform_Formal.pdf)** | Institution, print/submit | **Primary PDF** — abstracts, maintenance record, full project detail |
+| **[Scalable_Real-Time_Inference_Platform_Formal_Document.pdf](Scalable_Real-Time_Inference_Platform_Formal_Document.pdf)** | Institution | Previous PDF export (regenerate: `make pdf`) |
 | **[../results/metrics_template.md](../results/metrics_template.md)** | Technical reviewers | Recorded load-test metrics with artifacts |
 | **[VERIFICATION.md](VERIFICATION.md)** | Third-party verifiers | Step-by-step reproduction of claims |
 

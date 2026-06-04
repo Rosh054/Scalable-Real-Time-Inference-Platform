@@ -10,6 +10,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_SOURCE = ROOT / "docs" / "PROJECT_FULL_DOCUMENT.md"
 DEFAULT_OUTPUT = ROOT / "docs" / "Scalable_Real-Time_Inference_Platform_Formal_Document.pdf"
+DEFAULT_OUTPUT_V2 = ROOT / "docs" / "Roshini_Scalable_Real-Time_Inference_Platform_Formal.pdf"
 
 
 def _basic_css() -> str:
@@ -93,7 +94,7 @@ def generate_with_fpdf(md_path: Path, pdf_path: Path) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Generate formal project PDF")
     parser.add_argument("--input", type=Path, default=DEFAULT_SOURCE)
-    parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT_V2)
     args = parser.parse_args()
 
     if not args.input.exists():
