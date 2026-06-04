@@ -307,7 +307,7 @@ The maintainer (Roshini) is responsible for:
 
 When an institution, employer, or referee receives a letter referencing this project, the team should direct verifiers to:
 
-1. **Repository** (GitHub URL — to be inserted when published).  
+1. **Repository:** https://github.com/Roshini054/scalable-real-time-inference-platform  
 2. **This document** — `docs/FORMAL_PROJECT_DOCUMENTATION.md`.  
 3. **Reproduction steps** — `docs/VERIFICATION.md`.  
 4. **Evidence files** — `results/hey_*.txt`, `results/metrics_template.md`.
@@ -315,7 +315,7 @@ When an institution, employer, or referee receives a letter referencing this pro
 **Suggested verifier script (2–5 minutes):**
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/Roshini054/scalable-real-time-inference-platform.git
 cd scalable-real-time-inference-platform
 make setup && source .venv/bin/activate
 make train-model && make up
