@@ -7,8 +7,8 @@ This document explains how to **authenticate** project claims without trusting R
 **Prerequisites:** Docker running
 
 ```bash
-git clone <repo-url>
-cd scalable-real-time-inference-platform
+git clone https://github.com/Rosh054/Scalable-Real-Time-Inference-Platform.git
+cd Scalable-Real-Time-Inference-Platform
 make setup && source .venv/bin/activate
 make train-model
 make up

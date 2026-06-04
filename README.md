@@ -3,7 +3,7 @@
 **AWS-aligned, real-time ML inference service** for Amazon SDE portfolio use: FastAPI, Redis cache-aside, PostgreSQL audit logging, Docker Compose validation, and **Terraform** for ECS Fargate + ALB + RDS + ElastiCache + S3 + CloudWatch.
 
 > **Official documentation (academic / internship / letters):** [docs/FORMAL_PROJECT_DOCUMENTATION.md](docs/FORMAL_PROJECT_DOCUMENTATION.md) · [docs/DOCUMENTATION_INDEX.md](docs/DOCUMENTATION_INDEX.md) · [docs/LETTER_SUPPORT_SUMMARY.md](docs/LETTER_SUPPORT_SUMMARY.md)  
-> **Repository:** https://github.com/Roshini054/scalable-real-time-inference-platform  
+> **Repository:** https://github.com/Rosh054/Scalable-Real-Time-Inference-Platform  
 > **Maintainer:** Roshini — repository and formal docs maintained for future enquiries.
 
 > **For recruiters / verifiers:** Reproduce claims in ~2 minutes with `make up && make verify` — see [docs/VERIFICATION.md](docs/VERIFICATION.md).

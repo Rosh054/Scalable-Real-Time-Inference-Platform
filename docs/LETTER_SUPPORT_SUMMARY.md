@@ -6,7 +6,7 @@
 
 **Candidate / Author:** Roshini  
 **Project:** Scalable Real-Time Inference Platform on AWS  
-**Repository:** scalable-real-time-inference-platform  
+**Repository:** https://github.com/Rosh054/Scalable-Real-Time-Inference-Platform  
 
 ---
 

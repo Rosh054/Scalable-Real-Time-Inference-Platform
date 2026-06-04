@@ -1,7 +1,7 @@
 # Project Documentation Index
 
 **Maintainer:** Roshini  
-**Repository:** https://github.com/Roshini054/scalable-real-time-inference-platform  
+**Repository:** https://github.com/Rosh054/Scalable-Real-Time-Inference-Platform  
 **Purpose:** Single entry point for all official project documentation. Use this index when responding to academic, internship, or employment enquiries.
 
 ---
