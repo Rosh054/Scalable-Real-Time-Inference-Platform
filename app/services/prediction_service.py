@@ -1,5 +1,6 @@
 """Prediction orchestration: cache, inference, persistence."""
 
+import logging
 import time
 import uuid
 from typing import Any
@@ -13,10 +14,16 @@ from app.core.metrics import app_metrics
 from app.db.models import Prediction
 from app.ml import predictor
 
+logger = logging.getLogger(__name__)
 
-def run_prediction(db: Session, request: PredictRequest) -> PredictResponse:
+
+def run_prediction(
+    db: Session,
+    request: PredictRequest,
+    request_id: str | None = None,
+) -> PredictResponse:
     settings = get_settings()
-    request_id = str(uuid.uuid4())
+    request_id = request_id or str(uuid.uuid4())
     payload = request.model_dump()
     hash_value = cache_module.input_hash(payload)
 
@@ -48,6 +55,16 @@ def run_prediction(db: Session, request: PredictRequest) -> PredictResponse:
     db.commit()
 
     app_metrics.record_prediction(cache_hit=cache_hit, latency_ms=latency_ms)
+
+    logger.info(
+        "prediction_complete",
+        extra={
+            "request_id": request_id,
+            "cache_hit": cache_hit,
+            "latency_ms": round(latency_ms, 3),
+            "model_version": settings.model_version,
+        },
+    )
 
     return PredictResponse(
         prediction=prediction_value,

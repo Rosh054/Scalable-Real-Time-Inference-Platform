@@ -2,7 +2,9 @@
 
 from fastapi import APIRouter
 
+from app import __version__
 from app.api.schemas import HealthResponse
+from app.config import get_settings
 from app.core import cache as cache_module
 from app.db.session import check_db_connection
 from app.ml.loader import is_model_loaded
@@ -16,6 +18,7 @@ def health() -> HealthResponse:
     db_ok = check_db_connection()
     model_ok = is_model_loaded()
 
+    settings = get_settings()
     all_ok = redis_ok and db_ok and model_ok
     return HealthResponse(
         status="healthy" if all_ok else "degraded",
@@ -23,4 +26,6 @@ def health() -> HealthResponse:
         redis="up" if redis_ok else "down",
         database="up" if db_ok else "down",
         model="loaded" if model_ok else "not_loaded",
+        environment=settings.app_env,
+        version=__version__,
     )

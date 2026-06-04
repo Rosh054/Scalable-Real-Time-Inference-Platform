@@ -24,6 +24,8 @@ class HealthResponse(BaseModel):
     redis: str
     database: str
     model: str
+    environment: str
+    version: str
 
 
 class ModelInfoResponse(BaseModel):

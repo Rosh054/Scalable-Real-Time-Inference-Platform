@@ -1,0 +1,38 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "TerraformStateOptional",
+      "Effect": "Allow",
+      "Action": ["s3:GetObject", "s3:PutObject", "s3:ListBucket"],
+      "Resource": [
+        "arn:aws:s3:::YOUR-TF-STATE-BUCKET",
+        "arn:aws:s3:::YOUR-TF-STATE-BUCKET/*"
+      ]
+    },
+    {
+      "Sid": "DeployInferencePlatform",
+      "Effect": "Allow",
+      "Action": [
+        "ec2:*",
+        "ecs:*",
+        "elasticloadbalancing:*",
+        "rds:*",
+        "elasticache:*",
+        "s3:*",
+        "iam:*",
+        "logs:*",
+        "cloudwatch:*",
+        "sns:*",
+        "ecr:*",
+        "application-autoscaling:*"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "aws:RequestedRegion": "us-east-1"
+        }
+      }
+    }
+  ]
+}

@@ -10,3 +10,5 @@ def test_health_returns_status(client):
     assert data["database"] == "up"
     assert data["model"] == "loaded"
     assert data["status"] == "healthy"
+    assert data["environment"]
+    assert data["version"]

@@ -1,0 +1,68 @@
+=== hey load test ===
+Target: http://localhost:8000/predict
+Duration: 30s, Concurrency: 50
+
+
+Summary:
+  Total:	30.0429 secs
+  Slowest:	0.4390 secs
+  Fastest:	0.0233 secs
+  Average:	0.0877 secs
+  Requests/sec:	569.9847
+  
+  Total data:	2192230 bytes
+  Size/request:	128 bytes
+
+Response time histogram:
+  0.023 [1]	|
+  0.065 [2522]	|■■■■■■■■■
+  0.106 [11808]	|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  0.148 [2309]	|■■■■■■■■
+  0.190 [341]	|■
+  0.231 [27]	|
+  0.273 [62]	|
+  0.314 [4]	|
+  0.356 [0]	|
+  0.397 [32]	|
+  0.439 [18]	|
+
+
+Latency distribution:
+  10%% in 0.0608 secs
+  25%% in 0.0711 secs
+  50%% in 0.0823 secs
+  75%% in 0.0973 secs
+  90%% in 0.1178 secs
+  95%% in 0.1349 secs
+  99%% in 0.1774 secs
+
+Details (average, fastest, slowest):
+  DNS+dialup:	0.0000 secs, 0.0000 secs, 0.0142 secs
+  DNS-lookup:	0.0000 secs, 0.0000 secs, 0.0039 secs
+  req write:	0.0000 secs, 0.0000 secs, 0.0076 secs
+  resp wait:	0.0869 secs, 0.0229 secs, 0.4243 secs
+  resp read:	0.0007 secs, 0.0000 secs, 0.0528 secs
+
+Status code distribution:
+  [200]	17124 responses
+
+
+
+
+=== Application metrics (after load) ===
+# HELP inference_requests_total Total HTTP requests handled
+# TYPE inference_requests_total counter
+inference_requests_total 17129
+# HELP inference_predictions_total Total predictions served
+# TYPE inference_predictions_total counter
+inference_predictions_total 17127
+# HELP inference_cache_hits_total Total cache hits
+# TYPE inference_cache_hits_total counter
+inference_cache_hits_total 17087
+# HELP inference_cache_hit_rate Cache hit rate
+# TYPE inference_cache_hit_rate gauge
+inference_cache_hit_rate 0.997665
+# HELP inference_latency_ms_avg Average prediction latency in ms
+# TYPE inference_latency_ms_avg gauge
+inference_latency_ms_avg 6.5563
+

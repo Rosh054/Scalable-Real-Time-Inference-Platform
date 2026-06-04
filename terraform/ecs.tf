@@ -9,7 +9,7 @@ resource "aws_ecs_cluster" "main" {
 }
 
 locals {
-  ecr_image = var.api_image != "" ? var.api_image : "${aws_ecr_repository.api.repository_url}:latest"
+  ecr_image    = var.api_image != "" ? var.api_image : "${aws_ecr_repository.api.repository_url}:latest"
   database_url = "postgresql://${var.db_username}:${random_password.db.result}@${aws_db_instance.postgres.address}:5432/${var.db_name}"
   redis_url    = "redis://${aws_elasticache_cluster.redis.cache_nodes[0].address}:6379/0"
 }

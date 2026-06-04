@@ -12,7 +12,9 @@ from sqlalchemy.orm import Session, sessionmaker
 os.environ.setdefault("APP_ENV", "test")
 os.environ.setdefault(
     "DATABASE_URL",
-    os.environ.get("TEST_DATABASE_URL", "postgresql://inference:inference@localhost:5432/inference_test"),
+    os.environ.get(
+        "TEST_DATABASE_URL", "postgresql://inference:inference@localhost:5432/inference_test"
+    ),
 )
 os.environ.setdefault("REDIS_URL", os.environ.get("TEST_REDIS_URL", "redis://localhost:6379/1"))
 os.environ.setdefault("MODEL_SOURCE", "local")

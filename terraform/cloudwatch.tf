@@ -142,9 +142,9 @@ resource "aws_cloudwatch_dashboard" "main" {
         width  = 12
         height = 6
         properties = {
-          query   = "SOURCE '${aws_cloudwatch_log_group.api.name}' | fields @timestamp, @message | sort @timestamp desc | limit 50"
-          region  = var.aws_region
-          title   = "API Logs"
+          query  = "SOURCE '${aws_cloudwatch_log_group.api.name}' | fields @timestamp, @message | sort @timestamp desc | limit 50"
+          region = var.aws_region
+          title  = "API Logs"
         }
       }
     ]

@@ -69,3 +69,19 @@ jobs:
 
       - name: Build Docker image
         run: docker build -t inference-api:ci .
+
+  smoke:
+    runs-on: ubuntu-latest
+    needs: docker
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Start stack and smoke test
+        run: |
+          docker compose up -d --wait
+          curl -sf http://localhost:8000/health | grep -q healthy
+          curl -sf -X POST http://localhost:8000/predict \
+            -H "Content-Type: application/json" \
+            -d '{"sepal_length":5.1,"sepal_width":3.5,"petal_length":1.4,"petal_width":0.2}' \
+            | grep -q prediction
+          docker compose down -v

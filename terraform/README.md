@@ -2,6 +2,8 @@
 
 Infrastructure for the scalable real-time inference platform.
 
+**Amazon SDE reviewers:** You do not need `terraform apply` to assess this project. Run `../scripts/verify_terraform.sh` or see [../docs/VERIFICATION.md](../docs/VERIFICATION.md).
+
 ## Resources created
 
 - VPC (public + private subnets, NAT)

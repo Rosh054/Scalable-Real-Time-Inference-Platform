@@ -1,4 +1,4 @@
-.PHONY: setup train-model test up down logs load-test docker-build lint migrate
+.PHONY: setup train-model test up down logs load-test docker-build lint migrate verify verify-terraform check pdf
 
 PYTHON ?= python3
 VENV ?= .venv
@@ -41,3 +41,17 @@ docker-build:
 
 migrate:
 	$(VENV)/bin/alembic upgrade head
+
+verify:
+	chmod +x scripts/verify_local.sh
+	./scripts/verify_local.sh
+
+verify-terraform:
+	chmod +x scripts/verify_terraform.sh
+	./scripts/verify_terraform.sh
+
+check: lint test verify-terraform
+	@echo "Static checks passed. For full smoke test: make up && make verify"
+
+pdf:
+	$(PY) scripts/generate_project_pdf.py
