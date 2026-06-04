@@ -1,170 +1,282 @@
 # Scalable Real-Time Inference Platform
 
-**AWS-aligned, real-time ML inference service** for Amazon SDE portfolio use: FastAPI, Redis cache-aside, PostgreSQL audit logging, Docker Compose validation, and **Terraform** for ECS Fargate + ALB + RDS + ElastiCache + S3 + CloudWatch.
+A production-oriented machine learning inference platform that delivers low-latency REST API predictions with Redis caching, PostgreSQL audit logging, containerised local deployment, and Terraform-defined AWS infrastructure.
 
-> **Official documentation (academic / internship / letters):** [docs/FORMAL_PROJECT_DOCUMENTATION.md](docs/FORMAL_PROJECT_DOCUMENTATION.md) · [docs/DOCUMENTATION_INDEX.md](docs/DOCUMENTATION_INDEX.md) · [docs/LETTER_SUPPORT_SUMMARY.md](docs/LETTER_SUPPORT_SUMMARY.md)  
-> **Repository:** https://github.com/Rosh054/Scalable-Real-Time-Inference-Platform  
-> **Maintainer:** Roshini — repository and formal docs maintained for future enquiries.
+| | |
+|---|---|
+| **Repository** | https://github.com/Rosh054/Scalable-Real-Time-Inference-Platform |
+| **Maintainer** | Roshini |
+| **License** | MIT |
+| **Status** | Application validated locally; AWS IaC ready (optional deploy) |
 
-> **For recruiters / verifiers:** Reproduce claims in ~2 minutes with `make up && make verify` — see [docs/VERIFICATION.md](docs/VERIFICATION.md).
+---
 
-## Amazon SDE highlights
+## Overview
 
-| Area | Evidence |
-|------|----------|
-| **Backend** | Typed REST API, cache-aside, DB audit trail, pytest |
-| **AWS design** | Full `terraform/` stack + [AWS architecture doc](docs/AWS_ARCHITECTURE.md) |
-| **Operations** | Health checks, Prometheus metrics, CloudWatch alarms (IaC) |
-| **Performance** | Load-tested: **~713 req/s**, **~108 ms p95**, **0% errors** — [metrics](results/metrics_template.md), [hey artifact](results/hey_20260601_143951.txt) |
-| **Authenticity** | No fabricated metrics; verification scripts + CI |
+This project implements an end-to-end **real-time inference service** suitable for academic, internship, and industry portfolio use. Clients submit validated feature payloads; the service returns model predictions while recording latency, cache behaviour, and a full audit trail in the database.
 
-**Portfolio guide:** [docs/AMAZON_SDE_PORTFOLIO.md](docs/AMAZON_SDE_PORTFOLIO.md) (Leadership Principles mapping, interview script, resume bullets).
+The same application codebase runs locally via **Docker Compose** and is designed to deploy on **Amazon Web Services** using **ECS Fargate**, **Application Load Balancer**, **RDS PostgreSQL**, **ElastiCache Redis**, **S3**, and **CloudWatch**.
 
-**$0 AWS path:** Application behavior validated locally; Terraform validated with `make verify-terraform` (no `apply` required).
+**Formal documentation** (abstracts, verification, PDF): see [Documentation](#documentation) below.
+
+---
+
+## Key capabilities
+
+- **REST API** — FastAPI with Pydantic validation and OpenAPI documentation (`/docs`)
+- **Cache-aside (Redis)** — Deterministic input hashing; TTL-based cache with hit/miss reporting
+- **Audit logging (PostgreSQL)** — Every prediction persisted with `request_id`, payload, latency, and cache status
+- **Observability** — `/health`, Prometheus-style `/metrics`, structured JSON logs in AWS environments
+- **Request tracing** — `X-Request-ID` on all responses for correlation with logs and database records
+- **ML serving** — scikit-learn Iris classifier; local `joblib` or S3 model loading (`MODEL_SOURCE`)
+- **Infrastructure as Code** — Terraform for VPC, ECS, ALB, RDS, ElastiCache, S3, IAM, CloudWatch alarms
+- **CI/CD** — GitHub Actions: lint, automated tests, Docker build, compose smoke test, Terraform validate
+
+---
 
 ## Architecture
 
-**Target AWS:**
+### Production target (AWS)
 
 ```text
-Client → ALB → ECS Fargate (FastAPI)
-                  ├── ElastiCache Redis
-                  ├── RDS PostgreSQL
-                  └── S3 (model.joblib)
-              CloudWatch logs / metrics / alarms
-GitHub Actions → ECR → ECS
+                    Internet
+                        |
+                        v
+           Application Load Balancer
+                        |
+                        v
+              ECS Fargate (FastAPI)
+                 /      |       \
+                v       v        v
+          ElastiCache  RDS       S3
+            Redis   PostgreSQL  model
+                        |
+                CloudWatch (logs, metrics, alarms)
+
+        GitHub Actions  --->  ECR  --->  ECS deployment
 ```
 
-**Local parity (Docker Compose):** same app code — [local ↔ AWS mapping](docs/LOCAL_TO_AWS_MAPPING.md).
+### Local implementation (validated)
 
 ```text
-Client → FastAPI → Redis + PostgreSQL
-              ↓
-         models/model.joblib
+Client  --->  FastAPI (:8000)
+                 |--- Redis (cache)
+                 |--- PostgreSQL (predictions)
+                 v
+            models/model.joblib
 ```
 
-## Quick start (reviewers)
+Service mapping: [docs/LOCAL_TO_AWS_MAPPING.md](docs/LOCAL_TO_AWS_MAPPING.md)
+
+---
+
+## Performance (verified, local)
+
+Load tests use **hey** (50 concurrent clients, 30 seconds, fixed payload). Results are stored in the repository and must not be altered without re-running tests.
+
+| Metric | Result |
+|--------|--------|
+| Throughput | ~713 requests/sec |
+| Latency p50 | ~65.9 ms |
+| Latency p95 | ~107.7 ms |
+| Latency p99 | ~151.3 ms |
+| Error rate | 0% |
+| Cache hit rate (repeated payload) | ~99.9% |
+| Latency reduction (cached vs uncached) | ~83% |
+
+**Evidence:** [results/metrics_template.md](results/metrics_template.md), [results/hey_20260601_143951.txt](results/hey_20260601_143951.txt)
+
+---
+
+## Technology stack
+
+| Layer | Technologies |
+|-------|----------------|
+| Application | Python 3.11+, FastAPI, Pydantic, Uvicorn |
+| Machine learning | scikit-learn, joblib |
+| Cache | Redis 7 |
+| Database | PostgreSQL 15, SQLAlchemy, Alembic |
+| Containers | Docker, Docker Compose |
+| Cloud (IaC) | Terraform — AWS ECS, ALB, RDS, ElastiCache, S3, CloudWatch |
+| Quality assurance | pytest, ruff, GitHub Actions |
+
+---
+
+## Getting started
+
+### Prerequisites
+
+- Python 3.11+
+- Docker and Docker Compose
+- Optional: [hey](https://github.com/rakyll/hey) for load testing (`brew install hey`)
+
+### Installation and run
 
 ```bash
-make setup && source .venv/bin/activate
+git clone https://github.com/Rosh054/Scalable-Real-Time-Inference-Platform.git
+cd Scalable-Real-Time-Inference-Platform
+
+make setup
+source .venv/bin/activate
 make train-model
 make up
-make verify          # automated PASS/FAIL checks
-make verify-terraform # IaC validate, no AWS spend
 ```
 
-API: http://localhost:8000/docs
+| Endpoint | URL |
+|----------|-----|
+| API documentation | http://localhost:8000/docs |
+| Health check | http://localhost:8000/health |
 
-## Verified resume bullets (local + AWS IaC)
-
-```text
-Built a FastAPI real-time ML inference service with Redis cache-aside and PostgreSQL prediction logging; load-tested at ~713 req/s, ~66 ms p50 / ~108 ms p95, 0% errors (results/hey_*.txt).
-```
-
-```text
-Designed AWS deployment (ECS Fargate, ALB, RDS, ElastiCache, S3, CloudWatch) in Terraform with CPU autoscaling and operational alarms; validated via CI terraform validate and local Docker parity.
-```
-
-## Features
-
-- `GET /health` — API, Redis, DB, model status (ALB health check path)
-- `POST /predict` — inference + cache + DB log + `request_id`, `latency_ms`
-- `GET /metrics` — Prometheus-style counters (cache hit rate, latency)
-- `GET /model-info` — schema + artifact location
-- `MODEL_SOURCE=local` | `s3` (ECS downloads model from S3 at startup)
-- JSON structured logs when `APP_ENV=aws` (CloudWatch Logs Insights)
-- Load tests: `hey`, Locust — [metrics template](results/metrics_template.md)
-
-## Tech stack
-
-| Layer | Technology |
-|-------|------------|
-| API | FastAPI, Pydantic, Uvicorn |
-| ML | scikit-learn, joblib |
-| Cache | Redis / ElastiCache |
-| DB | PostgreSQL / RDS |
-| AWS IaC | Terraform (ECS, ALB, RDS, ElastiCache, S3, CloudWatch, IAM) |
-| CI/CD | GitHub Actions (test + Docker + terraform validate) |
-
-## Local vs AWS deploy (Amazon SDE)
-
-**Better for most Amazon SDE interviews:** this repo as-is — **local proof + Terraform design** ($0).
-
-Live AWS deploy only helps if you will operate it and discuss it deeply. See [docs/LOCAL_VS_AWS_FOR_AMAZON.md](docs/LOCAL_VS_AWS_FOR_AMAZON.md).
-
-## Documentation
-
-| Doc | Purpose |
-|-----|---------|
-| [docs/AMAZON_SDE_PORTFOLIO.md](docs/AMAZON_SDE_PORTFOLIO.md) | Interview prep, LP mapping |
-| [docs/LOCAL_VS_AWS_FOR_AMAZON.md](docs/LOCAL_VS_AWS_FOR_AMAZON.md) | **Local vs AWS — which to choose** |
-| [docs/AWS_ARCHITECTURE.md](docs/AWS_ARCHITECTURE.md) | Well-Architected, security, scaling |
-| [docs/LOCAL_TO_AWS_MAPPING.md](docs/LOCAL_TO_AWS_MAPPING.md) | Service mapping table |
-| [docs/VERIFICATION.md](docs/VERIFICATION.md) | How to authenticate claims |
-| [docs/ARCHITECTURE_DECISIONS.md](docs/ARCHITECTURE_DECISIONS.md) | ADRs |
-| [terraform/README.md](terraform/README.md) | Optional paid deploy |
-
-## API examples
+### Verification (reviewers)
 
 ```bash
-curl -s http://localhost:8000/health | jq
+make verify              # End-to-end API smoke test
+make check               # Lint, pytest, Terraform validate
+make verify-terraform    # IaC only (no AWS charges)
+```
+
+Full procedure: [docs/VERIFICATION.md](docs/VERIFICATION.md)
+
+---
+
+## API reference
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/health` | Service, Redis, database, and model status |
+| `POST` | `/predict` | Run inference; returns prediction, `request_id`, `cache_hit`, `latency_ms` |
+| `GET` | `/metrics` | Application counters (Prometheus text format) |
+| `GET` | `/model-info` | Model metadata and input schema |
+
+### Example: prediction request
+
+```bash
 curl -s -X POST http://localhost:8000/predict \
   -H "Content-Type: application/json" \
-  -d '{"sepal_length":5.1,"sepal_width":3.5,"petal_length":1.4,"petal_width":0.2}' | jq
-curl -s http://localhost:8000/metrics
+  -d '{
+    "sepal_length": 5.1,
+    "sepal_width": 3.5,
+    "petal_length": 1.4,
+    "petal_width": 0.2
+  }'
 ```
 
-## Load testing
+### Example: health check
 
 ```bash
-make load-test   # requires: brew install hey
+curl -s http://localhost:8000/health
 ```
 
-Record results in `results/metrics_template.md`. Committed artifacts in `results/hey_*.txt` support reproducibility.
+---
 
-## AWS deployment (optional — incurs cost)
+## Configuration
 
-```bash
-cd terraform && terraform init && terraform apply
-```
+Copy `.env.example` to `.env` for local development. Primary variables:
 
-See [terraform/README.md](terraform/README.md). Use `terraform destroy` when finished.
+| Variable | Description |
+|----------|-------------|
+| `APP_ENV` | `local` or `aws` (controls log format) |
+| `DATABASE_URL` | PostgreSQL connection string |
+| `REDIS_URL` | Redis connection string |
+| `MODEL_SOURCE` | `local` or `s3` |
+| `MODEL_LOCAL_PATH` | Path to joblib artifact |
+| `CACHE_TTL_SECONDS` | Redis entry TTL |
 
-Example least-privilege deploy policy: [iam/deploy-policy.least-privilege.example.json](iam/deploy-policy.least-privilege.example.json).
+---
 
-## Makefile
+## Makefile commands
 
 | Command | Description |
 |---------|-------------|
-| `make setup` | venv + deps |
-| `make train-model` | Train Iris model |
-| `make up` / `make down` | Start/stop stack |
-| `make verify` | Reviewer verification script |
-| `make verify-terraform` | `terraform validate` (no apply) |
-| `make check` | lint + test + terraform validate |
-| `make test` | pytest |
-| `make load-test` | hey load test |
+| `make setup` | Create virtual environment and install dependencies |
+| `make train-model` | Train and save Iris classifier to `models/model.joblib` |
+| `make up` | Start Docker Compose stack |
+| `make down` | Stop Docker Compose stack |
+| `make test` | Run pytest (requires PostgreSQL and Redis) |
+| `make check` | Lint, test, and Terraform validate |
+| `make verify` | Automated local verification script |
+| `make load-test` | Run hey load test against local API |
+| `make pdf` | Generate formal PDF from project documentation |
+
+---
+
+## AWS deployment
+
+Terraform under `terraform/` defines the full production stack. Deployment is **optional** and incurs AWS charges (NAT Gateway, RDS, ElastiCache, ALB, Fargate).
+
+```bash
+cd terraform
+cp terraform.tfvars.example terraform.tfvars
+terraform init
+terraform plan
+terraform apply   # only when ready to incur cost
+```
+
+Teardown: `terraform destroy` — see [terraform/README.md](terraform/README.md).
+
+**Note:** Application behaviour is validated locally. Live AWS metrics should only be claimed after a successful deploy and documented load test.
+
+---
 
 ## CI/CD
 
-| Workflow | Purpose |
-|----------|---------|
-| `ci.yml` | ruff, pytest, Docker build |
-| `terraform.yml` | `terraform fmt` + `validate` |
-| `deploy.yml` | Optional ECR → ECS (requires AWS secrets) |
+| Workflow | Description |
+|----------|-------------|
+| [ci.yml](.github/workflows/ci.yml) | Ruff lint, pytest, Docker image build, Compose smoke test |
+| [terraform.yml](.github/workflows/terraform.yml) | `terraform fmt` and `validate` |
+| [deploy.yml](.github/workflows/deploy.yml) | Optional ECR push and ECS deploy (requires AWS secrets) |
+
+---
 
 ## Project structure
 
 ```text
-app/              # FastAPI (api, cache, db, ml, services)
-docs/             # Amazon SDE + AWS + verification guides
-terraform/        # AWS IaC
-iam/              # Example deploy IAM policy
-scripts/          # train, load test, verify_*.sh
-results/          # metrics_template.md, hey_*.txt artifacts
-tests/            # pytest
+app/                 Application source (API, cache, database, ML, services)
+docs/                Formal and technical documentation
+terraform/           AWS infrastructure-as-code
+scripts/             Training, load testing, verification, PDF generation
+tests/               Automated test suite
+results/             Load-test metrics and artifacts
+.github/workflows/   Continuous integration and deployment
 ```
+
+---
+
+## Documentation
+
+| Document | Audience |
+|----------|----------|
+| [FORMAL_PROJECT_DOCUMENTATION.md](docs/FORMAL_PROJECT_DOCUMENTATION.md) | Academic, internship, institutional enquiries |
+| [DOCUMENTATION_INDEX.md](docs/DOCUMENTATION_INDEX.md) | Documentation catalogue |
+| [LETTER_SUPPORT_SUMMARY.md](docs/LETTER_SUPPORT_SUMMARY.md) | One-page summary for reference letters |
+| [Scalable_Real-Time_Inference_Platform_Formal_Document.pdf](docs/Scalable_Real-Time_Inference_Platform_Formal_Document.pdf) | Printable formal document |
+| [VERIFICATION.md](docs/VERIFICATION.md) | Third-party reproduction guide |
+| [AWS_ARCHITECTURE.md](docs/AWS_ARCHITECTURE.md) | AWS design and Well-Architected mapping |
+| [ARCHITECTURE_DECISIONS.md](docs/ARCHITECTURE_DECISIONS.md) | Architecture decision records |
+
+---
+
+## Testing
+
+```bash
+docker compose up postgres redis -d
+docker compose exec postgres psql -U inference -c "CREATE DATABASE inference_test;" 2>/dev/null || true
+
+export TEST_DATABASE_URL=postgresql://inference:inference@localhost:5432/inference_test
+export TEST_REDIS_URL=redis://localhost:6379/0
+make test
+```
+
+---
+
+## Maintenance and enquiries
+
+This repository is maintained by **Roshini** for academic, internship, and professional reference purposes. For institutional verification, use the formal documentation and verification guide linked above.
+
+When citing performance figures or deployment status, refer to `results/metrics_template.md` and Section 9 of the formal project documentation.
+
+---
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+This project is released under the [MIT License](LICENSE).
