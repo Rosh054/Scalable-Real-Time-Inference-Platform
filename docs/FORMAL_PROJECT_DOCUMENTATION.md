@@ -328,6 +328,7 @@ make verify
 
 | Document | Location |
 |----------|----------|
+| **Formal PDF (print/submit)** | [Scalable_Real-Time_Inference_Platform_Formal_Document.pdf](Scalable_Real-Time_Inference_Platform_Formal_Document.pdf) |
 | Documentation index | [DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md) |
 | AWS architecture detail | [AWS_ARCHITECTURE.md](AWS_ARCHITECTURE.md) |
 | Local ↔ AWS mapping | [LOCAL_TO_AWS_MAPPING.md](LOCAL_TO_AWS_MAPPING.md) |
